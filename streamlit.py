@@ -88,7 +88,7 @@ colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
-    points = pd.DataFrame(data=points, columns=["X-axis","Y-axis"])
+    points = pd.DataFrame(data=points)
     #plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
 
 # Plot centroids
