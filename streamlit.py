@@ -102,4 +102,5 @@ centroids = np.array(centroids)
 #plt.grid(True)
 #plt.show()
 
-st.scatter_chart(points, x_labels = "X-axis", y_label = "Y-axis")
+data = [0,1]
+st.scatter_chart(data, x_labels = "X-axis", y_label = "Y-axis")
