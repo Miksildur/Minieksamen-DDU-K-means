@@ -1,10 +1,9 @@
 import streamlit as st
+import numpy as np
+# import matplotlib.pyplot as plt
 
 st.title("Testing Streamlit")
 st.write("**pls work O_O**")
-import numpy as np
-import matplotlib.pyplot as plt
-
 
 def generate_random_dataset(k, n, spread, seed=42):
     """
@@ -89,16 +88,18 @@ colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
     points = np.array(points)
-    plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
+    #plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
 
 # Plot centroids
 centroids = np.array(centroids)
-plt.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
+#plt.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
 
 # Labels and legend
-plt.xlabel("X-axis")
-plt.ylabel("Y-axis")
-plt.title("K-Means Clustering")
-plt.legend()
-plt.grid(True)
-plt.show()
+#plt.xlabel("X-axis")
+#plt.ylabel("Y-axis")
+#plt.title("K-Means Clustering")
+#plt.legend()
+#plt.grid(True)
+#plt.show()
+
+st.scatter(points, x_labels = "X-axis", y_label = "Y-axis")
