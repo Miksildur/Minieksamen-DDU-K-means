@@ -80,7 +80,7 @@ k = 4
 iterations = 10
 centroids, classes = k_means_clustering(data, k, iterations)
 
-plt.figure(figsize=(8, 6))
+# plt.figure(figsize=(8, 6))
 
 # Define color map
 colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
