@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 # import matplotlib.pyplot as plt
 
 st.title("Testing Streamlit")
@@ -87,7 +88,7 @@ colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
-    points = np.array(points)
+    points = pd.Dataframe.(points)
     #plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
 
 # Plot centroids
@@ -102,5 +103,4 @@ centroids = np.array(centroids)
 #plt.grid(True)
 #plt.show()
 
-data = [0,1]
 st.scatter_chart(data, x_labels = "X-axis", y_label = "Y-axis")
