@@ -26,7 +26,7 @@ if st.sidebar.button("Generate Cluster"):
     st.write(f"Generated {num_points} points around the center ({x_center}, {y_center})")
 
 # --- K-Means Clustering ---
-def k_means_clustering(data, k, iterations=1):
+def k_means_clustering(data, k, iterations=10):
     centroids = data[np.random.choice(len(data), k, replace=False)]
     for _ in range(iterations):
         classes = {tuple(c): [] for c in centroids}
@@ -40,12 +40,12 @@ def k_means_clustering(data, k, iterations=1):
 def create_plot():
     fig = go.Figure()
 
-    # Add clicked points to plot
+    # Add clicked points to plot without orange circles
     if st.session_state.clicked_points:
         clicked_x, clicked_y = zip(*st.session_state.clicked_points)
         fig.add_trace(go.Scatter(
-            x=clicked_x, y=clicked_y, mode='markers', name='Clicked Points',
-            marker=dict(color='orange', size=12, symbol="circle-open")
+            x=clicked_x, y=clicked_y, mode='markers', name='Generated Points',
+            marker=dict(color='blue', size=8)  # No orange circles, just blue points
         ))
 
     # Perform K-Means clustering if there are points
