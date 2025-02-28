@@ -1,4 +1,4 @@
-import streamlit as st
+owimport streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -90,7 +90,7 @@ centroids, classes = k_means_clustering(data, k, iterations)
 # plt.figure(figsize=(8, 6))
 
 # Define color map
-colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
+colors = ['red', 'blue', 'green', 'cyan', 'magenta', 'yellow']  # Supports up to 6 clusters
 
 # Create interactive Plotly figure
 fig_plotly = go.Figure()
