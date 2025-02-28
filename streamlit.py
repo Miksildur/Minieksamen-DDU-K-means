@@ -22,6 +22,8 @@ def generate_random_dataset(k, n, spread, seed=42):
 
 data = generate_random_dataset(k=4, n=300, spread=10)
 
+st.write("Sample Data (First 5 points):", data[:5])  # Debugging line
+
 # --- K-Means Clustering ---
 def k_means_clustering(data, k, iterations=10):
     centroids = data[np.random.choice(len(data), k, replace=False)]
