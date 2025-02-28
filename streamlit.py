@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
 
-fig = plt.figure()
+#fig = plt.figure()
 
 def generate_random_dataset(k, n, spread, seed=42):
     """
@@ -92,24 +92,24 @@ def onclick(event):
     print([event.xdata, event.ydata])
     st.write([event.xdata, event.ydata])
 
-#fig,ax = plt.subplots()
+fig,ax = plt.subplots()
 
 #fig.canvas.mpl_connect('button_press_event', onclick)
 
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
     points = np.array(points)
-    plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
+    ax.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
 
 # Plot centroids
 centroids = np.array(centroids)
-plt.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
+ax.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
 
 # Labels and legend
-plt.xlabel("X-axis")
-plt.ylabel("Y-axis")
-plt.title("K-Means Clustering")
-plt.legend()
-plt.grid(True)
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_title("K-Means Clustering")
+ax.legend()
+ax.grid(True)
 # plt.show()
 st.pyplot(fig)
