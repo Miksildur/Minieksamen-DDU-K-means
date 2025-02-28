@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from streamlit_plotly_events import plotly_events  # External package for click events
 
 
-fig_plotly = go.Figure()
+fig = go.Figure()
 
 st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
@@ -104,7 +104,7 @@ fig = go.Figure()
 # Add clusters
 for i, (centroid, points) in enumerate(classes.items()):
     points = np.array(points)
-    fig_plotly.add_trace(go.Scatter(
+    fig.add_trace(go.Scatter(
         x=points[:, 0], y=points[:, 1], mode='markers',
         name=f'Cluster {i+1}', marker=dict(color=colors[i % len(colors)])
     ))
@@ -112,7 +112,7 @@ for i, (centroid, points) in enumerate(classes.items()):
 centroids=np.array(centroids)
 
 # Add centroids
-fig_plotly.add_trace(go.Scatter(
+fig.add_trace(go.Scatter(
     x=centroids[:, 0], y=centroids[:, 1], mode='markers', name='Centroids',
     marker=dict(color='black', symbol='x', size=10)
 ))
