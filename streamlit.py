@@ -1,87 +1,110 @@
-import streamlit as st
 import numpy as np
+import streamlit as st
 import plotly.graph_objects as go
 
-st.title("Interactive Animated K-Means Clustering")
-st.write("Enter a cluster center and generate a cluster of points around it!")
+# --- Helper functions for K-means ---
+def generate_random_dataset(k=1, n=100, spread=3.0, seed=42):
+    """Generates a dataset with `k` random clusters."""
+    np.random.seed(seed)
+    clusters = []
+    centers = np.random.uniform(0, 50, size=(k, 2))  # Cluster centers in range [0, 50]
+    
+    for center in centers:
+        points = center + spread * np.random.randn(n, 2)
+        clusters.append(points)
 
-# --- Store cluster points ---
-if "clicked_points" not in st.session_state:
-    st.session_state.clicked_points = []
+    return np.vstack(clusters), centers
 
-# Input for cluster center
-st.sidebar.header("Enter Cluster Center")
-x_center = st.sidebar.number_input("Cluster Center X", min_value=0, max_value=100, step=1)
-y_center = st.sidebar.number_input("Cluster Center Y", min_value=0, max_value=100, step=1)
+def find_closest_centroid(point, centroids):
+    closest_centroid = None
+    closest_distance = None
+    for centroid in centroids:
+        distance = np.linalg.norm(point - centroid)
+        if closest_distance is None or distance < closest_distance:
+            closest_distance = distance
+            closest_centroid = centroid
+    return closest_centroid
 
-# Input for number of points and spread
-num_points = st.sidebar.number_input("Number of Points", min_value=1, max_value=100, value=20, step=1)
-spread = st.sidebar.number_input("Spread (Standard Deviation)", min_value=1, max_value=30, value=5, step=1)
+def update_centroids(centroids, classes):
+    updated_centroids = []
+    for centroid in centroids:
+        if len(classes[tuple(centroid)]) > 0:
+            x_mean = np.mean([point[0] for point in classes[tuple(centroid)]])
+            y_mean = np.mean([point[1] for point in classes[tuple(centroid)]])
+            updated_centroids.append((x_mean, y_mean))
+        else:
+            updated_centroids.append(centroid)
+    return updated_centroids
 
-# Button to generate points around the center
-if st.sidebar.button("Generate Cluster"):
-    # Generate random points around the given center
-    points = np.random.normal(loc=[x_center, y_center], scale=spread, size=(num_points, 2))
-    st.session_state.clicked_points.extend(points.tolist())
-    st.write(f"Generated {num_points} points around the center ({x_center}, {y_center})")
-
-# --- K-Means Clustering ---
-def k_means_clustering(data, k, iterations=10):
-    # Initialize centroids randomly from existing data
-    centroids = data[np.random.choice(len(data), k, replace=False)]
-    animations = []
+def k_means_clustering(data, k, iterations):
+    centroids = []
+    all_classes = []
+    all_centroids = []
+    
+    # Initialize centroids randomly
+    centroids.append(data[np.random.randint(0, len(data))])  # First centroid randomly
+    for _ in range(1, k):
+        distances = np.array([min([np.linalg.norm(point - c) for c in centroids]) for point in data])
+        probabilities = distances / distances.sum()
+        centroids.append(data[np.random.choice(len(data), p=probabilities)])
 
     for _ in range(iterations):
-        # Step 1: Assign points to nearest centroid
-        classes = {tuple(c): [] for c in centroids}
+        # Reset classes dictionary
+        classes = {tuple(centroid): [] for centroid in centroids}
+        
+        # Assign points to the closest centroid
         for point in data:
-            closest_centroid = min(centroids, key=lambda c: np.linalg.norm(point - c))
+            closest_centroid = find_closest_centroid(point, centroids)
             classes[tuple(closest_centroid)].append(point)
+        
+        all_classes.append(classes.copy())  # Store classes for animation
+        all_centroids.append(centroids.copy())  # Store centroids for animation
 
-        # Step 2: Recalculate centroids as mean of assigned points
-        new_centroids = []
-        for centroid, points in classes.items():
-            if points:
-                new_centroids.append(np.mean(points, axis=0))
-            else:
-                new_centroids.append(centroid)  # Keep centroid if no points were assigned
+        # Update centroids
+        centroids = update_centroids(centroids, classes)
 
-        centroids = np.array(new_centroids)
+    return all_centroids, all_classes
 
-        # Store the current state for animation
-        animation_step = {
-            'centroids': centroids,
-            'classes': classes
-        }
-        animations.append(animation_step)
+# --- Streamlit setup ---
+st.title("K-Means Clustering Animation with Plotly")
 
-    return animations
+# Input for the number of clusters
+k = st.sidebar.number_input("Number of Clusters", min_value=1, max_value=20, value=8, step=1)
+n = st.sidebar.number_input("Number of Points per Cluster", min_value=10, max_value=200, value=50, step=10)
+iterations = st.sidebar.number_input("Number of Iterations", min_value=1, max_value=50, value=10, step=1)
+spread = st.sidebar.number_input("Spread of Clusters", min_value=0, max_value=10, value=3, step=1)
 
-# --- Create Plotly Figure ---
+# Generate random dataset
+data, initial_centers = generate_random_dataset(k=k, n=n, spread=spread)
+
+# Perform K-Means clustering
+all_centroids, all_classes = k_means_clustering(data, k, iterations)
+
+# --- Plotly Animation ---
 def create_animation(animations):
     fig = go.Figure()
+    colors = ['red', 'blue', 'green', 'cyan', 'magenta', 'yellow', 'orange', 'pink', 'purple', 'brown']  # Adjust colors for more clusters
+    frames = []
 
-    # Initial points
-    clicked_x, clicked_y = zip(*st.session_state.clicked_points)
+    # Add points as a base trace
+    clicked_x, clicked_y = zip(*data)
     fig.add_trace(go.Scatter(
-        x=clicked_x, y=clicked_y, mode='markers', name='Points',
+        x=clicked_x, y=clicked_y, mode='markers', name='Data Points',
         marker=dict(color='gray', size=5)
     ))
 
-    # Add empty frames for animation
-    frames = []
-    
+    # Generate frames for animation
     for iteration, animation_step in enumerate(animations):
         centroids = np.array(animation_step['centroids'])
         classes = animation_step['classes']
         
-        # Add clusters for this frame
         cluster_traces = []
+        # Add points for each cluster
         for i, (centroid, points) in enumerate(classes.items()):
             points = np.array(points)
             cluster_traces.append(go.Scatter(
                 x=points[:, 0], y=points[:, 1], mode='markers',
-                name=f'Cluster {i+1}', marker=dict(color=f'rgb({i*50},{255-i*50},150)', size=6)
+                name=f'Cluster {i+1}', marker=dict(color=colors[i % len(colors)], size=6)
             ))
 
         # Add centroids for this frame
@@ -91,21 +114,15 @@ def create_animation(animations):
         )
         cluster_traces.append(centroid_trace)
 
-        # Create frame with cluster and centroid positions
-        frames.append(go.Frame(
-            data=cluster_traces,
-            name=f'Frame {iteration}'
-        ))
+        # Create frame with clusters and centroids
+        frames.append(go.Frame(data=cluster_traces, name=f'Frame {iteration}'))
 
     fig.frames = frames
 
-    # Update layout for animation
     fig.update_layout(
         title="K-Means Clustering Animation",
         xaxis_title="X-axis",
         yaxis_title="Y-axis",
-        xaxis=dict(range=[0, 100]),  # Manually setting the axis range
-        yaxis=dict(range=[0, 100]),
         updatemenus=[{
             'buttons': [
                 {
@@ -132,12 +149,9 @@ def create_animation(animations):
 
     return fig
 
-# Perform K-Means clustering with animation steps
-if len(st.session_state.clicked_points) > 1:
-    data = np.array(st.session_state.clicked_points)
-    k = 4  # Number of clusters
-    iterations = 10  # Number of iterations
-    animations = k_means_clustering(data, k, iterations)
+# Create the plot animation with frames
+animations = [{'centroids': all_centroids[i], 'classes': all_classes[i]} for i in range(iterations)]
+fig = create_animation(animations)
 
-    # Create the plot animation
-    st.plotly_chart(create_animation(animations), use_container_width=True)
+# Show the plotly animation in Streamlit
+st.plotly_chart(fig, use_container_width=True)
