@@ -99,17 +99,17 @@ def onclick(event):
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
     points = np.array(points)
-    ax.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
+    plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
 
 # Plot centroids
 centroids = np.array(centroids)
-ax.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
+plt.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
 
 # Labels and legend
-ax.set_xlabel("X-axis")
-ax.set_ylabel("Y-axis")
-ax.set_title("K-Means Clustering")
-ax.legend()
-ax.grid(True)
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
+plt.title("K-Means Clustering")
+plt.legend()
+plt.grid(True)
 # plt.show()
 st.pyplot(fig)
