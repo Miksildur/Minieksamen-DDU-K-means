@@ -26,7 +26,7 @@ if st.sidebar.button("Generate Cluster"):
     st.write(f"Generated {num_points} points around the center ({x_center}, {y_center})")
 
 # --- K-Means Clustering ---
-def k_means_clustering(data, k, iterations=10):
+def k_means_clustering(data, k, iterations=1):
     centroids = data[np.random.choice(len(data), k, replace=False)]
     for _ in range(iterations):
         classes = {tuple(c): [] for c in centroids}
