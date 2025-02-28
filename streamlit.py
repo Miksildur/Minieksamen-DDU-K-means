@@ -136,7 +136,8 @@ def create_animation(animations):
 if len(st.session_state.clicked_points) > 1:
     data = np.array(st.session_state.clicked_points)
     k = 4  # Number of clusters
-    animations = k_means_clustering(data, k, iterations=10)
-    
+    iterations = 10  # Number of iterations
+    animations = k_means_clustering(data, k, iterations)
+
     # Create the plot animation
     st.plotly_chart(create_animation(animations), use_container_width=True)
