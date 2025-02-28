@@ -22,6 +22,10 @@ def generate_random_dataset(k, n, spread, seed=42):
 
 data = generate_random_dataset(k=4, n=300, spread=10)
 
+# Debugging: Display the generated data points and check if it looks as expected
+st.write("Generated Data Points:")
+st.write(data[:10])  # Display the first 10 data points
+
 # --- K-Means Clustering ---
 def k_means_clustering(data, k, iterations=10):
     centroids = data[np.random.choice(len(data), k, replace=False)]
@@ -73,6 +77,12 @@ fig.update_layout(
     yaxis=dict(range=[0, 100])
 )
 
+# Debugging: Display the plot range
+st.write("Centroids:")
+st.write(centroids)
+st.write("Classes:")
+st.write(classes)
+
 # --- Capture Click Events ---
 click_data = plotly_events(fig, click_event=True)  # Captures clicks
 
@@ -82,3 +92,5 @@ if click_data:
     if (new_x, new_y) not in st.session_state.clicked_points:  # Avoid duplicate points
         st.session_state.clicked_points.append((new_x, new_y))
         st.rerun()  # Refresh UI
+
+st.plotly_chart(fig)
