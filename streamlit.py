@@ -40,14 +40,6 @@ def k_means_clustering(data, k, iterations=10):
 def create_plot():
     fig = go.Figure()
 
-    # Add clicked points to plot without circles
-    if st.session_state.clicked_points:
-        clicked_x, clicked_y = zip(*st.session_state.clicked_points)
-        fig.add_trace(go.Scatter(
-            x=clicked_x, y=clicked_y, mode='markers', name='Generated Points',
-            marker=dict(color='black', size=5)  # Simple black points with no circles
-        ))
-
     # Perform K-Means clustering if there are points
     if len(st.session_state.clicked_points) > 1:
         data = np.array(st.session_state.clicked_points)
