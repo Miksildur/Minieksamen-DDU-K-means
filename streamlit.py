@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+from sklearn.metrics import silhouette_score
 
 st.title("Interactive Animated K-Means Clustering")
 st.write("Enter a cluster center and generate a cluster of points around it!")
@@ -47,7 +48,9 @@ def k_means_clustering(data, k, iterations=10):
         new_centroids = np.array([data[labels == i].mean(axis=0) if np.sum(labels == i) > 0 else centroids[i] for i in range(k)])
         centroids = new_centroids
 
-    return animations
+    # Calculate inertia (sum of squared distances)
+    inertia = np.sum([np.min(distances, axis=0)**2])
+    return animations, inertia
 
 # --- Create Plotly Figure ---
 def create_animation(animations):
@@ -123,12 +126,33 @@ def create_animation(animations):
 
     return fig
 
-# Perform K-Means clustering with animation steps
+# --- Main Logic ---
 if len(st.session_state.clicked_points) > 1:
     data = np.array(st.session_state.clicked_points)
-    k = 4  # Number of clusters
-    iterations = 10  # Number of iterations
-    animations = k_means_clustering(data, k, iterations)
+    max_k = 8  # Maximum number of clusters to test
+    iterations = 10  # Number of iterations for K-Means
 
-    # Create the plot animation
-    st.plotly_chart(create_animation(animations), use_container_width=True)
+    # Store inertia values for each k
+    inertia_values = []
+
+    # Create a column for each k
+    cols = st.columns(max_k)
+    for k in range(1, max_k + 1):
+        with cols[k - 1]:
+            st.write(f"K = {k}")
+            animations, inertia = k_means_clustering(data, k, iterations)
+            inertia_values.append(inertia)
+            st.plotly_chart(create_animation(animations), use_container_width=True)
+
+    # Plot inertia vs k
+    st.write("### Inertia vs Number of Clusters (K)")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=list(range(1, max_k + 1)), y=inertia_values, mode='lines+markers', name='Inertia'
+    ))
+    fig.update_layout(
+        xaxis_title="Number of Clusters (K)",
+        yaxis_title="Inertia",
+        title="Inertia as a Function of K"
+    )
+    st.plotly_chart(fig, use_container_width=True)
