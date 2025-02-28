@@ -83,7 +83,7 @@ if click_data:
         st.session_state.clicked_points.append((new_x, new_y))
         st.rerun()  # Refresh UI
 
-# Show the Plotly chart once here
+# --- Show the Plotly chart once here ---
 st.plotly_chart(fig)
 
 # --- Debugging Info ---
