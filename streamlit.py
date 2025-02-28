@@ -99,7 +99,7 @@ centroids, classes = k_means_clustering(data, k, iterations)
 colors = ['red', 'blue', 'green', 'cyan', 'magenta', 'yellow']  # Supports up to 6 clusters
 
 # Create interactive Plotly figure
-fig_plotly = go.Figure()
+fig = go.Figure()
 
 # Add clusters
 for i, (centroid, points) in enumerate(classes.items()):
