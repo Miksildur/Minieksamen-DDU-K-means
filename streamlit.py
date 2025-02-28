@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+from streamlit_plotly_events import plotly_events
 
 st.title("Interactive K-Means Clustering")
 st.write("Click on the plot to add a new point!")
@@ -64,10 +65,12 @@ def create_plot():
 
     return fig
 
-# --- Handle Click Event ---
-click_data = st.plotly_chart(create_plot(), use_container_width=True)
+# --- Capture Click Events ---
+click_data = plotly_events(create_plot(), click_event=True)
 
+# --- Handle Click Event ---
 if click_data:
     new_x, new_y = click_data[0]["x"], click_data[0]["y"]
     st.session_state.clicked_points.append((new_x, new_y))
+    st.write(f"Added point at ({new_x}, {new_y})")
     st.rerun()  # Refresh UI to add the new point
