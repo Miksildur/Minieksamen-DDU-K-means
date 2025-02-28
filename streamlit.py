@@ -3,7 +3,7 @@ import numpy as np
 import plotly.graph_objects as go
 
 st.title("Interactive K-Means Clustering")
-st.write("Click on the plot to add a new point!")
+st.write("Enter the coordinates of new points manually below!")
 
 # --- Store clicked points ---
 if "clicked_points" not in st.session_state:
@@ -72,10 +72,15 @@ fig.update_layout(
     yaxis=dict(range=[0, 100])
 )
 
-# --- Handle Click Event ---
-if st.session_state.clicked_points:
-    st.write("Clicked Points:")
-    st.write(st.session_state.clicked_points)
+# --- Handle New Point Input ---
+x_input = st.number_input("Enter X-coordinate for new point:", min_value=0, max_value=100, value=50)
+y_input = st.number_input("Enter Y-coordinate for new point:", min_value=0, max_value=100, value=50)
+
+# Add point to clicked points list
+if st.button("Add Point"):
+    st.session_state.clicked_points.append((x_input, y_input))
+    st.write(f"Added point at ({x_input}, {y_input})")
+    st.rerun()  # Refresh UI
 
 # --- Show the Plotly chart once here ---
 st.plotly_chart(fig)
