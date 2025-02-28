@@ -86,7 +86,12 @@ centroids, classes = k_means_clustering(data, k, iterations)
 # Define color map
 colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 
+def onclick(event):
+    print([event.xdata, event.ydata])
+
 fig,ax = plt.subplots()
+
+fig.canvas.mpl_connect('button_press_event', onclick)
 
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
