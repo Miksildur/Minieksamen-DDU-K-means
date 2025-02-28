@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import mpdl3
+import mpld3
 import streamlit.components.v1 as components
 
 st.title("Testing Streamlit Balls")
