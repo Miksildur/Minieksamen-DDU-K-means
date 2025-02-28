@@ -1,8 +1,9 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+import plotly.express as px
 
-st.title("Interactive K-Means Clustering")
+st.title("Interactive Animated K-Means Clustering")
 st.write("Enter a cluster center and generate a cluster of points around it!")
 
 # --- Store cluster points ---
@@ -27,50 +28,107 @@ if st.sidebar.button("Generate Cluster"):
 
 # --- K-Means Clustering ---
 def k_means_clustering(data, k, iterations=10):
-    centroids = data[np.random.choice(len(data), k, replace=False)]
+    centroids = data[np.random.choice(len(data), k, replace=False)]  # Random initial centroids
+    animations = []
+
     for _ in range(iterations):
         classes = {tuple(c): [] for c in centroids}
         for point in data:
             closest_centroid = min(centroids, key=lambda c: np.linalg.norm(point - c))
             classes[tuple(closest_centroid)].append(point)
+
+        # Calculate new centroids
         centroids = [np.mean(points, axis=0) if points else centroid for centroid, points in classes.items()]
-    return np.array(centroids), classes
+        
+        # Store the current step for animation
+        animation_step = {
+            'centroids': centroids,
+            'classes': classes
+        }
+        animations.append(animation_step)
+
+    return animations
 
 # --- Create Plotly Figure ---
-def create_plot():
+def create_animation(animations):
     fig = go.Figure()
 
-    # Perform K-Means clustering if there are points
-    if len(st.session_state.clicked_points) > 1:
-        data = np.array(st.session_state.clicked_points)
-        k = 4  # Number of clusters
-        centroids, classes = k_means_clustering(data, k)
+    # Initial points
+    clicked_x, clicked_y = zip(*st.session_state.clicked_points)
+    fig.add_trace(go.Scatter(
+        x=clicked_x, y=clicked_y, mode='markers', name='Points',
+        marker=dict(color='gray', size=5)
+    ))
 
-        # Add clusters
-        colors = ['red', 'blue', 'green', 'cyan', 'magenta', 'yellow']
+    # Add empty frames for animation
+    frames = []
+    
+    for animation_step in animations:
+        centroids = np.array(animation_step['centroids'])
+        classes = animation_step['classes']
+        
+        # Add clusters for this frame
+        cluster_traces = []
         for i, (centroid, points) in enumerate(classes.items()):
             points = np.array(points)
-            fig.add_trace(go.Scatter(
+            cluster_traces.append(go.Scatter(
                 x=points[:, 0], y=points[:, 1], mode='markers',
-                name=f'Cluster {i+1}', marker=dict(color=colors[i % len(colors)], size=5)
+                name=f'Cluster {i+1}', marker=dict(color=f'rgb({i*50},{255-i*50},150)', size=6)
             ))
 
-        # Add centroids
-        fig.add_trace(go.Scatter(
+        # Add centroids for this frame
+        centroid_trace = go.Scatter(
             x=centroids[:, 0], y=centroids[:, 1], mode='markers', name='Centroids',
             marker=dict(color='black', symbol='x', size=10)
+        )
+        cluster_traces.append(centroid_trace)
+
+        # Create frame with cluster and centroid positions
+        frames.append(go.Frame(
+            data=cluster_traces,
+            name=f'Frame {_}'
         ))
 
-    # Update layout
+    fig.frames = frames
+
+    # Update layout for animation
     fig.update_layout(
-        title="K-Means Clustering", 
-        xaxis_title="X-axis", 
+        title="K-Means Clustering Animation",
+        xaxis_title="X-axis",
         yaxis_title="Y-axis",
         xaxis=dict(range=[0, 100]),  # Manually setting the axis range
-        yaxis=dict(range=[0, 100])
+        yaxis=dict(range=[0, 100]),
+        updatemenus=[{
+            'buttons': [
+                {
+                    'args': [None, {'frame': {'duration': 1000, 'redraw': True}, 'fromcurrent': True}],
+                    'label': 'Play',
+                    'method': 'animate'
+                },
+                {
+                    'args': [[None], {'frame': {'duration': 0, 'redraw': True}, 'mode': 'immediate', 'transition': {'duration': 0}}],
+                    'label': 'Pause',
+                    'method': 'animate'
+                }
+            ],
+            'direction': 'left',
+            'pad': {'r': 10, 't': 87},
+            'showactive': False,
+            'type': 'buttons',
+            'x': 0.1,
+            'xanchor': 'right',
+            'y': 0,
+            'yanchor': 'top'
+        }]
     )
 
     return fig
 
-# --- Display Plot ---
-st.plotly_chart(create_plot(), use_container_width=True)
+# Perform K-Means clustering with animation steps
+if len(st.session_state.clicked_points) > 1:
+    data = np.array(st.session_state.clicked_points)
+    k = 4  # Number of clusters
+    animations = k_means_clustering(data, k, iterations=10)
+    
+    # Create the plot animation
+    st.plotly_chart(create_animation(animations), use_container_width=True)
