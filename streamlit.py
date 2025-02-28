@@ -3,8 +3,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-print("Hello")
-
 st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
 
@@ -90,6 +88,7 @@ colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 
 def onclick(event):
     print([event.xdata, event.ydata])
+    st.write([event.xdata, event.ydata])
 
 fig,ax = plt.subplots()
 
