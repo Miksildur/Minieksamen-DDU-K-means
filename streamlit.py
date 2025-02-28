@@ -31,7 +31,7 @@ def k_means_clustering(data, k, iterations=10):
     centroids = data[np.random.choice(len(data), k, replace=False)]  # Random initial centroids
     animations = []
 
-    for _ in range(iterations):
+    for iteration in range(iterations):
         classes = {tuple(c): [] for c in centroids}
         for point in data:
             closest_centroid = min(centroids, key=lambda c: np.linalg.norm(point - c))
@@ -63,7 +63,7 @@ def create_animation(animations):
     # Add empty frames for animation
     frames = []
     
-    for animation_step in animations:
+    for iteration, animation_step in enumerate(animations):
         centroids = np.array(animation_step['centroids'])
         classes = animation_step['classes']
         
@@ -86,7 +86,7 @@ def create_animation(animations):
         # Create frame with cluster and centroid positions
         frames.append(go.Frame(
             data=cluster_traces,
-            name=f'Frame {_}'
+            name=f'Frame {iteration}'
         ))
 
     fig.frames = frames
