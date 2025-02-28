@@ -134,14 +134,12 @@ if len(st.session_state.clicked_points) > 1:
     # Store inertia values for each k
     inertia_values = []
 
-    # Create a column for each k
-    cols = st.columns(max_k)
+    # Create a separate row for each k
     for k in range(1, max_k + 1):
-        with cols[k - 1]:
-            st.write(f"K = {k}")
-            animations, inertia = k_means_clustering(data, k, iterations)
-            inertia_values.append(inertia)
-            st.plotly_chart(create_animation(animations), use_container_width=True)
+        st.write(f"### K = {k}")
+        animations, inertia = k_means_clustering(data, k, iterations)
+        inertia_values.append(inertia)
+        st.plotly_chart(create_animation(animations), use_container_width=True)
 
     # Plot inertia vs k
     st.write("### Inertia vs Number of Clusters (K)")
