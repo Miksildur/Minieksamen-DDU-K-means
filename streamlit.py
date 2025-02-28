@@ -134,7 +134,6 @@ click_data = plotly_events(fig, click_event=True)  # This captures clicks
 if click_data:
     new_x, new_y = click_data[0]["x"], click_data[0]["y"]  # Get first clicked point
     st.session_state.clicked_points.append((new_x, new_y))
-    st.rerun()  # Refresh UI
         
     # Rerun script to update plot
     st.rerun()
