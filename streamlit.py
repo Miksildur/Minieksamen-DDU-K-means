@@ -1,14 +1,29 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
-from streamlit_plotly_events import plotly_events
 
 st.title("Interactive K-Means Clustering")
-st.write("Click on the plot to add a new point!")
+st.write("Enter a cluster center and generate a cluster of points around it!")
 
-# --- Store clicked points ---
+# --- Store cluster points ---
 if "clicked_points" not in st.session_state:
     st.session_state.clicked_points = []
+
+# Input for cluster center
+st.sidebar.header("Enter Cluster Center")
+x_center = st.sidebar.number_input("Cluster Center X", min_value=0, max_value=100, step=1)
+y_center = st.sidebar.number_input("Cluster Center Y", min_value=0, max_value=100, step=1)
+
+# Input for number of points and spread
+num_points = st.sidebar.number_input("Number of Points", min_value=1, max_value=100, value=20, step=1)
+spread = st.sidebar.number_input("Spread (Standard Deviation)", min_value=1, max_value=30, value=5, step=1)
+
+# Button to generate points around the center
+if st.sidebar.button("Generate Cluster"):
+    # Generate random points around the given center
+    points = np.random.normal(loc=[x_center, y_center], scale=spread, size=(num_points, 2))
+    st.session_state.clicked_points.extend(points.tolist())
+    st.write(f"Generated {num_points} points around the center ({x_center}, {y_center})")
 
 # --- K-Means Clustering ---
 def k_means_clustering(data, k, iterations=10):
@@ -65,12 +80,5 @@ def create_plot():
 
     return fig
 
-# --- Capture Click Events ---
-click_data = plotly_events(create_plot(), click_event=True)
-
-# --- Handle Click Event ---
-if click_data:
-    new_x, new_y = click_data[0]["x"], click_data[0]["y"]
-    st.session_state.clicked_points.append((new_x, new_y))
-    st.write(f"Added point at ({new_x}, {new_y})")
-    st.rerun()  # Refresh UI to add the new point
+# --- Display Plot ---
+st.plotly_chart(create_plot(), use_container_width=True)
