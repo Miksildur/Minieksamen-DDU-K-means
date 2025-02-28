@@ -1,9 +1,10 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+from streamlit_plotly_events import plotly_events
 
 st.title("Interactive K-Means Clustering")
-st.write("Enter the coordinates of new points manually below!")
+st.write("Click on the plot to add a new point!")
 
 # --- Store clicked points ---
 if "clicked_points" not in st.session_state:
@@ -72,15 +73,16 @@ fig.update_layout(
     yaxis=dict(range=[0, 100])
 )
 
-# --- Handle New Point Input ---
-x_input = st.number_input("Enter X-coordinate for new point:", min_value=0, max_value=100, value=50)
-y_input = st.number_input("Enter Y-coordinate for new point:", min_value=0, max_value=100, value=50)
+# --- Capture Click Events ---
+click_data = plotly_events(fig, click_event=True)  # Captures clicks
 
-# Add point to clicked points list
-if st.button("Add Point"):
-    st.session_state.clicked_points.append((x_input, y_input))
-    st.write(f"Added point at ({x_input}, {y_input})")
-    st.rerun()  # Refresh UI
+# --- Handle Click Event ---
+if click_data:
+    new_x, new_y = click_data[0]["x"], click_data[0]["y"]
+    if (new_x, new_y) not in st.session_state.clicked_points:  # Avoid duplicate points
+        st.session_state.clicked_points.append((new_x, new_y))
+        st.write(f"Added point at ({new_x}, {new_y})")
+        st.rerun()  # Refresh UI
 
 # --- Show the Plotly chart once here ---
 st.plotly_chart(fig)
