@@ -4,6 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
+from streamlit_plotly_events import plotly_events  # External package for click events
+
 
 fig_plotly = go.Figure()
 
@@ -118,26 +120,21 @@ fig_plotly.add_trace(go.Scatter(
 # Add dynamically clicked points
 if st.session_state.clicked_points:
     clicked_x, clicked_y = zip(*st.session_state.clicked_points)
-    fig_plotly.add_trace(go.Scatter(
+    fig.add_trace(go.Scatter(
         x=clicked_x, y=clicked_y, mode='markers', name='Clicked Points',
         marker=dict(color='orange', size=12, symbol="circle-open")
     ))
 
-fig_plotly.update_layout(
-    title="K-Means Clustering", xaxis_title="X-axis", yaxis_title="Y-axis"
-)
+fig.update_layout(title="K-Means Clustering", xaxis_title="X-axis", yaxis_title="Y-axis")
 
 # --- Capture Click Events ---
-click_data = st.plotly_chart(fig_plotly, use_container_width=True, key="plot")
+click_data = plotly_events(fig, click_event=True)  # This captures clicks
 
 # --- Handle Click Event ---
-if click_data and click_data is not None:
-    if "points" in click_data and len(click_data["points"]) > 0:
-        new_point = click_data["points"][0]  # Get first clicked point
-        new_x, new_y = new_point["x"], new_point["y"]
-        
-        # Append to stored clicked points
-        st.session_state.clicked_points.append((new_x, new_y))
+if click_data:
+    new_x, new_y = click_data[0]["x"], click_data[0]["y"]  # Get first clicked point
+    st.session_state.clicked_points.append((new_x, new_y))
+    st.rerun()  # Refresh UI
         
         # Rerun script to update plot
         st.rerun()
