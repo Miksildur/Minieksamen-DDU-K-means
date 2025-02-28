@@ -139,4 +139,4 @@ if click_data:
     # Rerun script to update plot
     st.rerun()
 
-st.plotly_chart(fig_plotly)
+#st.plotly_chart(fig_plotly)
