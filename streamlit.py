@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
-import plotly.express as px
 
 st.title("Interactive Animated K-Means Clustering")
 st.write("Enter a cluster center and generate a cluster of points around it!")
@@ -28,19 +27,28 @@ if st.sidebar.button("Generate Cluster"):
 
 # --- K-Means Clustering ---
 def k_means_clustering(data, k, iterations=10):
-    centroids = data[np.random.choice(len(data), k, replace=False)]  # Random initial centroids
+    # Initialize centroids randomly from existing data
+    centroids = data[np.random.choice(len(data), k, replace=False)]
     animations = []
 
-    for iteration in range(iterations):
+    for _ in range(iterations):
+        # Step 1: Assign points to nearest centroid
         classes = {tuple(c): [] for c in centroids}
         for point in data:
             closest_centroid = min(centroids, key=lambda c: np.linalg.norm(point - c))
             classes[tuple(closest_centroid)].append(point)
 
-        # Calculate new centroids
-        centroids = [np.mean(points, axis=0) if points else centroid for centroid, points in classes.items()]
-        
-        # Store the current step for animation
+        # Step 2: Recalculate centroids as mean of assigned points
+        new_centroids = []
+        for centroid, points in classes.items():
+            if points:
+                new_centroids.append(np.mean(points, axis=0))
+            else:
+                new_centroids.append(centroid)  # Keep centroid if no points were assigned
+
+        centroids = np.array(new_centroids)
+
+        # Store the current state for animation
         animation_step = {
             'centroids': centroids,
             'classes': classes
