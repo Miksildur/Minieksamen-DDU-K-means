@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
 
+fig = plt.figure()
+
 def generate_random_dataset(k, n, spread, seed=42):
     """
     Generates a dataset with `k` random clusters.
@@ -90,9 +92,9 @@ def onclick(event):
     print([event.xdata, event.ydata])
     st.write([event.xdata, event.ydata])
 
-fig,ax = plt.subplots()
+#fig,ax = plt.subplots()
 
-fig.canvas.mpl_connect('button_press_event', onclick)
+#fig.canvas.mpl_connect('button_press_event', onclick)
 
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
