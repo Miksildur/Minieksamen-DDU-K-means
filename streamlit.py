@@ -114,7 +114,7 @@ ax.set_title("K-Means Clustering")
 ax.legend()
 ax.grid(True)
 
-fig_html = mpld3-fig_to_html(fig)
+fig_html = mpld3.fig_to_html(fig)
 components.html(fig_html, height=600)
 
 st.pyplot(fig)
