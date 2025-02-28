@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.title("Testing Streamlit")
+st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
 
 def generate_random_dataset(k, n, spread, seed=42):
