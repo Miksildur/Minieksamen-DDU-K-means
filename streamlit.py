@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
-from sklearn.metrics import silhouette_score
 
 st.title("Interactive Animated K-Means Clustering")
 st.write("Enter a cluster center and generate a cluster of points around it!")
@@ -49,7 +48,7 @@ def k_means_clustering(data, k, iterations=10):
         centroids = new_centroids
 
     # Calculate inertia (sum of squared distances)
-    inertia = np.sum([np.min(distances, axis=0)**2])
+    inertia = np.sum(np.min(distances, axis=0)**2)
     return animations, inertia
 
 # --- Create Plotly Figure ---
