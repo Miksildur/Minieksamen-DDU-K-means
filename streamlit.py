@@ -103,6 +103,8 @@ for i, (centroid, points) in enumerate(classes.items()):
         name=f'Cluster {i+1}', marker=dict(color=colors[i % len(colors)])
     ))
 
+centroids=np.array(centroids)
+
 # Add centroids
 fig_plotly.add_trace(go.Scatter(
     x=centroids[:, 0], y=centroids[:, 1], mode='markers', name='Centroids',
