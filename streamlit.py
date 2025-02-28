@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from streamlit_plotly_events import plotly_events  # External package for click events
 
 
-fig = go.Figure()
+#fig = go.Figure()
 
 st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
