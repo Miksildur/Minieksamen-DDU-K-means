@@ -86,21 +86,22 @@ centroids, classes = k_means_clustering(data, k, iterations)
 # Define color map
 colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 
+fig,ax = plt.subplots()
+
 # Plot each cluster with a unique color
 for i, (centroid, points) in enumerate(classes.items()):
     points = np.array(points)
-    plt.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
+    ax.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
 
 # Plot centroids
 centroids = np.array(centroids)
-plt.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
+ax.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
 
 # Labels and legend
-plt.xlabel("X-axis")
-plt.ylabel("Y-axis")
-plt.title("K-Means Clustering")
-plt.legend()
-plt.grid(True)
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_title("K-Means Clustering")
+ax.legend()
+ax.grid(True)
 # plt.show()
-fig = plt.plot()
 st.pyplot(fig)
