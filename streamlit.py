@@ -2,8 +2,10 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import mpld3
-import streamlit.components.v1 as components
+import plotly.express as px
+import plotly.graph_objects as go
+
+fig_plotly = go.Figure()
 
 st.title("Testing Streamlit Balls")
 st.write("**pls work O_O**")
@@ -90,29 +92,25 @@ centroids, classes = k_means_clustering(data, k, iterations)
 # Define color map
 colors = ['r', 'b', 'g', 'c', 'm', 'y']  # Supports up to 6 clusters
 
-def onclick(event):
-    print([event.xdata, event.ydata])
-    st.write([event.xdata, event.ydata])
+# Create interactive Plotly figure
+fig_plotly = go.Figure()
 
-fig,ax = plt.subplots()
-
-#fig.canvas.mpl_connect('button_press_event', onclick)
-
-# Plot each cluster with a unique color
+# Add clusters
 for i, (centroid, points) in enumerate(classes.items()):
     points = np.array(points)
-    ax.scatter(points[:, 0], points[:, 1], color=colors[i % len(colors)], label=f'Cluster {i+1}')
+    fig_plotly.add_trace(go.Scatter(
+        x=points[:, 0], y=points[:, 1], mode='markers',
+        name=f'Cluster {i+1}', marker=dict(color=colors[i % len(colors)])
+    ))
 
-# Plot centroids
-centroids = np.array(centroids)
-ax.scatter(centroids[:, 0], centroids[:, 1], color='black', marker='X', s=200, label='Centroids')
+# Add centroids
+fig_plotly.add_trace(go.Scatter(
+    x=centroids[:, 0], y=centroids[:, 1], mode='markers', name='Centroids',
+    marker=dict(color='black', symbol='x', size=10)
+))
 
-# Labels and legend
-ax.set_xlabel("X-axis")
-ax.set_ylabel("Y-axis")
-ax.set_title("K-Means Clustering")
-ax.legend()
-ax.grid(True)
+fig_plotly.update_layout(
+    title="K-Means Clustering", xaxis_title="X-axis", yaxis_title="Y-axis"
+)
 
-fig_html = mpld3.fig_to_html(fig)
-components.html(fig_html, height=600)
+st.plotly_chart(fig_plotly)
