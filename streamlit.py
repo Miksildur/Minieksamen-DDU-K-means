@@ -22,8 +22,6 @@ def generate_random_dataset(k, n, spread, seed=42):
 
 data = generate_random_dataset(k=4, n=300, spread=10)
 
-st.write("Sample Data (First 5 points):", data[:5])  # Debugging line
-
 # --- K-Means Clustering ---
 def k_means_clustering(data, k, iterations=10):
     centroids = data[np.random.choice(len(data), k, replace=False)]
@@ -66,7 +64,14 @@ if st.session_state.clicked_points:
         marker=dict(color='orange', size=12, symbol="circle-open")
     ))
 
-fig.update_layout(title="K-Means Clustering", xaxis_title="X-axis", yaxis_title="Y-axis")
+# Ensure axis range covers data
+fig.update_layout(
+    title="K-Means Clustering", 
+    xaxis_title="X-axis", 
+    yaxis_title="Y-axis",
+    xaxis=dict(range=[0, 100]),  # Manually setting the axis range
+    yaxis=dict(range=[0, 100])
+)
 
 # --- Capture Click Events ---
 click_data = plotly_events(fig, click_event=True)  # Captures clicks
