@@ -120,7 +120,7 @@ if len(st.session_state.clicked_points) > 1:
         st.plotly_chart(create_animation(animations), use_container_width=True)
 
     st.write("### Albue-metoden")
-    st.write("For at finde den optimale værdi for K, bruges albue-metoden som sammenligner afstandene fra punkter til centroid, også kaldt SSE(Sum of squared errors), for hver værdi af K. Der hvor man ser den største ændring i ")
+    st.write("For at finde den optimale værdi for K, bruges albue-metoden som sammenligner afstandene fra punkter til centroid, også kaldt SSE(Sum of squared errors), for hver værdi af K. Der hvor man ser den største ændring i SSE er den værdi for K som vil være optimal")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=list(range(1, max_k + 1)), y=inertia_values, mode='lines+markers', name='SSE'
