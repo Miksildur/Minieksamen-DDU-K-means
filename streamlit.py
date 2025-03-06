@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 st.title("Interaktiv K-means clustering")
 st.write("K-means clustering er en algoritme som bruges til at gruppere unlabeled data. Dette kan blandt andet bruges til at lave et anbefalingsystem til en streamingplatform eller segmentering af kunder. Algoritmen virker ud fra følgende princip:")
 st.write("""
-1.    Vælg **k** tilfældige punkter fra datasættet som centrum til **k** clusters
+1.    Vælg ***k*** tilfældige punkter fra datasættet som centrum til ***k*** clusters
 2.    Tildel hvert punkt til det nærmeste centrum
 3.    Find centroiden for hver cluster ved at tage det gennemsnitlige x- og y -værdi, inden for hvert cluster, og lad dette være det nye centrum
 4.    Gentag punkt 2-3 indtil centroiderne ikke ændre sig, eller antallet af iterationer er nået.
