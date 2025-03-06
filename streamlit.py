@@ -14,7 +14,7 @@ st.sidebar.header("Generér clusters")
 x_center = st.sidebar.number_input("X-værdi for clustercenter", min_value=0, max_value=100, step=1)
 y_center = st.sidebar.number_input("Y-værdi for clustercenter", min_value=0, max_value=100, step=1)
 num_points = st.sidebar.number_input("Antal punkter i cluster", min_value=1, max_value=100, value=20, step=1)
-spread = st.sidebar.number_input("Spredning(lavere værdier giver tættere pakket clusters)", min_value=1, max_value=30, value=5, step=1)
+spread = st.sidebar.number_input("Spredning(lavere værdier giver tættere pakket clusters)", min_value=1, max_value=30, value=2, step=1)
 
 # Button to generate a single cluster
 if st.sidebar.button("Generér Cluster"):
@@ -33,7 +33,7 @@ def generate_random_clusters(n_clusters, points_per_cluster, spread):
 st.sidebar.header("Tilfældig generering af clusters")
 n_clusters = st.sidebar.number_input("Antal clusters", min_value=1, max_value=10, value=3, step=1)
 rand_points_per_cluster = st.sidebar.number_input("Punkter per cluster", min_value=1, max_value=100, value=20, step=1)
-rand_spread = st.sidebar.number_input("Spredning af tilfældige clusters", min_value=1, max_value=30, value=5, step=1)
+rand_spread = st.sidebar.number_input("Spredning af tilfældige clusters", min_value=1, max_value=30, value=2, step=1)
 
 if st.sidebar.button("Generér Tilfældige Clusters"):
     generate_random_clusters(n_clusters, rand_points_per_cluster, rand_spread)
