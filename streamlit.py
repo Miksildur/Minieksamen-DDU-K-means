@@ -2,23 +2,22 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 
-st.title("Interaktiv Animeret K-Means Klyngedannelse")
-st.write("Indtast et klyngecenter og generér en klynge af punkter omkring det!")
+st.title("Interaktiv K-means clustering")
+st.write("Indtast et eller flere koordinatsæt til klyngerne, og se udviklingen af algoritmen ved at trykke på afspil")
 
 if "clicked_points" not in st.session_state:
     st.session_state.clicked_points = []
 
-st.sidebar.header("Indtast Klyngecenter")
-x_center = st.sidebar.number_input("Klyngecenter X", min_value=0, max_value=100, step=1)
-y_center = st.sidebar.number_input("Klyngecenter Y", min_value=0, max_value=100, step=1)
+st.sidebar.header("Generér clusters")
+x_center = st.sidebar.number_input("X-værdi for clustercenter", min_value=0, max_value=100, step=1)
+y_center = st.sidebar.number_input("Y-værdi for clustercenter", min_value=0, max_value=100, step=1)
 
-num_points = st.sidebar.number_input("Antal Punkter", min_value=1, max_value=100, value=20, step=1)
-spread = st.sidebar.number_input("Spredning (Standardafvigelse)", min_value=1, max_value=30, value=5, step=1)
+num_points = st.sidebar.number_input("Antal punkter i cluster", min_value=1, max_value=100, value=20, step=1)
+spread = st.sidebar.number_input("Spredning(lavere værdier giver tættere pakket clusters)", min_value=1, max_value=30, value=5, step=1)
 
-if st.sidebar.button("Generér Klynge"):
+if st.sidebar.button("Generér Cluster"):
     points = np.random.normal(loc=[x_center, y_center], scale=spread, size=(num_points, 2))
     st.session_state.clicked_points.extend(points.tolist())
-    st.write(f"Genererede {num_points} punkter omkring centeret ({x_center}, {y_center})")
 
 def k_means_clustering(data, k, iterations=10):
     centroids = data[np.random.choice(len(data), k, replace=False)]
@@ -53,7 +52,7 @@ def create_animation(animations):
     ))
 
     fig.add_trace(go.Scatter(
-        x=[], y=[], mode='markers', name='Klyngecentre',
+        x=[], y=[], mode='markers', name='Centroid',
         marker=dict(color='black', symbol='x', size=10)
     ))
 
@@ -77,7 +76,6 @@ def create_animation(animations):
     fig.frames = frames
 
     fig.update_layout(
-        title="K-Means Klyngedannelsesanimation",
         xaxis_title="X-akse",
         yaxis_title="Y-akse",
         xaxis=dict(range=[0, 100], autorange=False),
@@ -116,7 +114,7 @@ if len(st.session_state.clicked_points) > 1:
     inertia_values = []
 
     for k in range(1, max_k + 1):
-        st.write(f"### K = {k}")
+        st.write(f"### K-means clustering med K = {k}")
         animations, inertia = k_means_clustering(data, k, iterations)
         inertia_values.append(inertia)
         st.plotly_chart(create_animation(animations), use_container_width=True)
