@@ -15,7 +15,7 @@ st.write("Nedenunder ses den interaktive K-means clustering algoritme. For at st
 if "clicked_points" not in st.session_state:
     st.session_state.clicked_points = []
 
-st.sidebar.header("Generér clusters")
+st.sidebar.header("Generer clusters")
 
 # User-defined cluster parameters
 x_center = st.sidebar.number_input("X-værdi for clustercenter", min_value=0, max_value=100, step=1)
@@ -24,7 +24,7 @@ num_points = st.sidebar.number_input("Antal punkter i cluster", min_value=1, max
 spread = st.sidebar.number_input("Spredning(lavere værdier giver tættere pakket clusters)", min_value=1, max_value=30, value=2, step=1)
 
 # Button to generate a single cluster
-if st.sidebar.button("Generér Cluster"):
+if st.sidebar.button("Generer Cluster"):
     points = np.random.normal(loc=[x_center, y_center], scale=spread, size=(num_points, 2))
     st.session_state.clicked_points.extend(points.tolist())
 
@@ -42,7 +42,7 @@ n_clusters = st.sidebar.number_input("Antal clusters", min_value=1, max_value=10
 rand_points_per_cluster = st.sidebar.number_input("Punkter per cluster", min_value=1, max_value=100, value=20, step=1)
 rand_spread = st.sidebar.number_input("Spredning af tilfældige clusters", min_value=1, max_value=30, value=2, step=1)
 
-if st.sidebar.button("Generér Tilfældige Clusters"):
+if st.sidebar.button("Generer Tilfældige Clusters"):
     generate_random_clusters(n_clusters, rand_points_per_cluster, rand_spread)
 
 def k_means_clustering(data, k, iterations=10):
