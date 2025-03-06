@@ -143,6 +143,7 @@ if len(st.session_state.clicked_points) > 1:
 
     # Plot inertia vs k
     st.write("### Inertia vs Number of Clusters (K)")
+    st.write("Der hvor man ser \"albuen\" knække, er den værdi for k, som nok vil være mest passende")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=list(range(1, max_k + 1)), y=inertia_values, mode='lines+markers', name='Inertia'
