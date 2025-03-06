@@ -119,15 +119,15 @@ if len(st.session_state.clicked_points) > 1:
         inertia_values.append(inertia)
         st.plotly_chart(create_animation(animations), use_container_width=True)
 
-    st.write("### Inerti vs Antal Klynger (K)")
-    st.write("Der hvor man ser \"albuen\" knække, er den værdi for K, som nok vil være mest passende")
+    st.write("### Albue-metoden")
+    st.write("For at finde den optimale værdi for K, bruges albue-metoden som sammenligner afstandene fra punkter til centroid, også kaldt SSE(Sum of squared errors), for hver værdi af K. Der hvor man ser den største ændring i ")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=list(range(1, max_k + 1)), y=inertia_values, mode='lines+markers', name='Inerti'
+        x=list(range(1, max_k + 1)), y=inertia_values, mode='lines+markers', name='SSE'
     ))
     fig.update_layout(
-        xaxis_title="Antal Klynger (K)",
-        yaxis_title="Inerti",
-        title="Inerti som en Funktion af K"
+        xaxis_title="Antal Clusters (K)",
+        yaxis_title="SSE",
+        title="SSE for hver værdi af K"
     )
     st.plotly_chart(fig, use_container_width=True)
