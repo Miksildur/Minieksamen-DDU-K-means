@@ -20,6 +20,26 @@ if st.sidebar.button("Generér Klynge"):
     st.session_state.clicked_points.extend(points.tolist())
     st.write(f"Genererede {num_points} punkter omkring centeret ({x_center}, {y_center})")
 
+def k_means_clustering(data, k, iterations=10):
+    centroids = data[np.random.choice(len(data), k, replace=False)]
+    animations = []
+
+    for _ in range(iterations):
+        distances = np.sqrt(((data - centroids[:, np.newaxis])**2).sum(axis=2))
+        labels = np.argmin(distances, axis=0)
+
+        animation_step = {
+            'centroids': centroids.copy(),
+            'labels': labels
+        }
+        animations.append(animation_step)
+
+        new_centroids = np.array([data[labels == i].mean(axis=0) if np.sum(labels == i) > 0 else centroids[i] for i in range(k)])
+        centroids = new_centroids
+
+    inertia = np.sum(np.min(distances, axis=0)**2)
+    return animations, inertia
+
 def create_animation(animations):
     data = np.array(st.session_state.clicked_points)
     clicked_x = data[:, 0]
