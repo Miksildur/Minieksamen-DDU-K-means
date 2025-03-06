@@ -3,7 +3,14 @@ import numpy as np
 import plotly.graph_objects as go
 
 st.title("Interaktiv K-means clustering")
-st.write("Indtast et eller flere koordinatsæt til klyngerne, og se udviklingen af algoritmen ved at trykke på afspil")
+st.write("K-means clustering er en algoritme som bruges til at gruppere unlabeled data. Dette kan blandt andet bruges til at lave et anbefalingsystem til en streamingplatform eller segmentering af kunder. Algoritmen virker ud fra følgende princip:")
+st.write("""
+1.    Vælg **k** tilfældige punkter fra datasættet som centrum til **k** clusters
+2.    Tildel hvert punkt til det nærmeste centrum
+3.    Find centroiden for hver cluster ved at tage det gennemsnitlige x- og y -værdi, inden for hvert cluster, og lad dette være det nye centrum
+4.    Gentag punkt 2-3 indtil centroiderne ikke ændre sig, eller antallet af iterationer er nået.
+""")
+st.write("Nedenunder ses den interaktive K-means clustering algoritme. For at starte skal der laves nogle punkter. Dette kan gøres ved at vælge værdier i menuen til venstre og generer punkterne. Der er lavet en animation til K=1 til K=8. For at se udviklingen gennem animationen kan du trykke på \"Afspil\" under hver graf")
 
 if "clicked_points" not in st.session_state:
     st.session_state.clicked_points = []
@@ -87,7 +94,7 @@ if len(st.session_state.clicked_points) > 1:
         inertia_values.append(inertia)
         st.plotly_chart(create_animation(animations), use_container_width=True)
     st.write("### Albue-metoden")
-    st.write("For at finde den optimale værdi for K, bruges albue-metoden som sammenligner afstandene fra punkter til centroid, også kaldt SSE(Sum of squared errors), for hver værdi af K. Der hvor man ser den største ændring i SSE er den værdi for K som vil være optimal")
+    st.write("For at finde den optimale værdi for K, bruges albue-metoden som sammenligner afstandene fra punkter til centroid, også kaldt SSE(Sum of squared errors), for hver værdi af K. Der hvor man ser \"knækket på albuen\" er den værdi for K som vil være optimal. Det er altså ikke den laveste værdi som nødvendigvis er den mest passende.")
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=list(range(1, max_k + 1)), y=inertia_values, mode='lines+markers', name='SSE'))
     fig.update_layout(xaxis_title="Antal Clusters (K)", yaxis_title="SSE", title="SSE for hver værdi af K")
