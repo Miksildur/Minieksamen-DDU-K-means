@@ -6,9 +6,9 @@ st.title("Interaktiv K-means clustering")
 st.write("K-means clustering er en algoritme som bruges til at gruppere unlabeled data. Dette kan blandt andet bruges til at lave et anbefalingsystem til en streamingplatform eller segmentering af kunder. Algoritmen virker ud fra følgende princip:")
 st.write("""
 1.    Vælg ***k*** tilfældige punkter fra datasættet som centrum til ***k*** clusters
-2.    Tildel hvert punkt til det nærmeste centrum
+2.    Tildel hvert punkt til det nærmeste centrum, og tilføj dem til dette cluster
 3.    Find centroiden for hver cluster ved at tage det gennemsnitlige x- og y -værdi, inden for hvert cluster, og lad dette være det nye centrum
-4.    Gentag punkt 2-3 indtil centroiderne ikke ændre sig, eller antallet af iterationer er nået.
+4.    Gentag punkt 2-3 indtil centroiderne ikke ændre sig, eller antallet af iterationer er nået(Sat til 10 i denne app).
 """)
 st.write("Nedenunder ses den interaktive K-means clustering algoritme. For at starte skal der laves nogle punkter. Dette kan gøres ved at vælge værdier i menuen til venstre og generer punkterne. Der er lavet en animation til K=1 til K=8. For at se udviklingen gennem animationen kan du trykke på \"Afspil\" under hver graf")
 
